@@ -11,6 +11,7 @@ import Test.Unit.Assert as Assert
 
 import Dict
 import Translator (t, tOrGuess)
+import Data.String
 
 structure :: Dict String
 structure =
@@ -40,4 +41,15 @@ main = runTest do
        Assert.equal (tOrGuess "" $ Leaf "a" "b") ""
        Assert.equal (tOrGuess "abc" $ Leaf "b" "b") "Abc"
        Assert.equal (tOrGuess "ab_cd" $ Leaf "b" "b") "Ab Cd"
+  suite "Tree mapping" do
+     test "Functor Laws" do
+        Assert.equal (map identity structure) structure
+        Assert.equal (split (Pattern " ") <$> toUpper <$> structure) (split (Pattern " ") <<< toUpper <$> structure)
+  suite "Tree Eq" do
+     test "Eq" do
+        Assert.equal (Leaf "a" "b") (Leaf "a" "b")
+        Assert.equal structure structure
+        Assert.assertFalse "Should not have matched" (Leaf "a" "b" == Leaf "c" "d")
+        Assert.assertFalse "Should not have matched" (Leaf "a" "b" == Branch "c" [Leaf "e" "d"])
+        Assert.assertFalse "Should not have matched" (Branch "c" [Leaf "a" "b"] == Branch "c" [Leaf "e" "d"])
 

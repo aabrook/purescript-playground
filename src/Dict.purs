@@ -22,6 +22,15 @@ instance showDict :: Show a => Show (Dict a) where
       (foldr (\n acc -> "  " <> (show n) <> "\n" <> acc) "" lst) <>
     ")"
 
+instance functorDict :: Functor Dict where
+  map f (Leaf k v) = Leaf k (f v)
+  map f (Branch k vs) = Branch k ((map f) <$> vs)
+
+instance eqDict :: Eq a => Eq (Dict a) where
+  eq (Leaf k v) (Leaf k' v') = k == k' && v == v'
+  eq (Branch k vs) (Branch k' vs') = k == k' && vs == vs'
+  eq l r = false
+
 get :: forall a. String -> Dict a -> Maybe (Dict a)
 get k d = do
   ks <- pure $ (split (Pattern ".") k)
