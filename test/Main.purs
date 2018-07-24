@@ -5,13 +5,14 @@ import Effect (Effect)
 import Effect.Console (log)
 
 import Data.Maybe
-import Test.Unit (suite, test, timeout)
+import Test.Unit (suite, test)
 import Test.Unit.Main (runTest)
 import Test.Unit.Assert as Assert
 
-import Translator
+import Dict
+import Translator (t, tOrGuess)
 
-structure :: Dict
+structure :: Dict String
 structure =
   Branch "a" [
     (Branch "b" [
