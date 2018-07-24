@@ -31,6 +31,11 @@ instance eqDict :: Eq a => Eq (Dict a) where
   eq (Branch k vs) (Branch k' vs') = k == k' && vs == vs'
   eq l r = false
 
+instance applyDict :: Apply Dict where
+  apply (Leaf k f) (Leaf _k v) = Leaf k (f v)
+  apply (Leaf k l) (Branch _k vs) = Branch k (map (apply (Leaf k l)) vs)
+  apply (Branch k fs) r = Branch k ((\f -> apply f r) <$> fs)
+
 get :: forall a. String -> Dict a -> Maybe (Dict a)
 get k d = do
   ks <- pure $ (split (Pattern ".") k)
