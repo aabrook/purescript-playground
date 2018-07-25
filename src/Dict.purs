@@ -4,7 +4,7 @@ module Dict (
 ) where
 
 import Prelude
-import Data.Array (find, head, tail)
+import Data.Array (find, uncons)
 import Data.Maybe (Maybe(..))
 import Data.String (Pattern(..), split)
 import Data.Traversable (foldr, foldl)
@@ -35,6 +35,9 @@ instance applyDict :: Apply Dict where
   apply (Leaf k f) (Leaf _k v) = Leaf k (f v)
   apply (Leaf k l) (Branch _k vs) = Branch k (map (apply (Leaf k l)) vs)
   apply (Branch k fs) r = Branch k ((\f -> apply f r) <$> fs)
+
+instance applicativeDict :: Applicative Dict where
+  pure v = Leaf "" v
 
 get :: forall a. String -> Dict a -> Maybe (Dict a)
 get k d

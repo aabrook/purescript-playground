@@ -53,4 +53,8 @@ main = runTest do
         Assert.assertFalse "Should not have matched" (Leaf "a" "b" == Leaf "c" "d")
         Assert.assertFalse "Should not have matched" (Leaf "a" "b" == Branch "c" [Leaf "e" "d"])
         Assert.assertFalse "Should not have matched" (Branch "c" [Leaf "a" "b"] == Branch "c" [Leaf "e" "d"])
+  suite "Tree Apply" do
+     test "Applicative Laws" do
+        Assert.equal (apply (Leaf "a" identity) (Leaf "_" "b")) (Leaf "a" "b")
+        Assert.equal ((Leaf "a" (>>>)) <*> (Leaf "_" toUpper) <*> (Leaf "b" (split (Pattern " "))) <*> (Leaf "n" "a b c")) ((Leaf "a" (toUpper >>> (split (Pattern " ")))) <*> (Leaf "b" "a b c"))
 
