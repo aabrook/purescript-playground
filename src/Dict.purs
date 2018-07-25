@@ -37,11 +37,12 @@ instance applyDict :: Apply Dict where
   apply (Branch k fs) r = Branch k ((\f -> apply f r) <$> fs)
 
 get :: forall a. String -> Dict a -> Maybe (Dict a)
-get k d = do
-  ks <- pure $ (split (Pattern ".") k)
-  h <- head ks
-  t <- tail ks
-  (foldl (\acc k -> \v -> acc v >>= step k) (get' h) t) d
+get k d
+  | getKey d == k = Just d
+  | otherwise = do
+    ks <- pure $ (split (Pattern ".") k)
+    { head: h, tail: t } <- uncons ks
+    (foldl (\acc k -> \v -> acc v >>= step k) (get' h) t) d
 
 get' :: forall a. String -> Dict a -> Maybe (Dict a)
 get' "" n = Nothing

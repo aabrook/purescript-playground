@@ -26,6 +26,7 @@ main :: Effect Unit
 main = runTest do
   suite "Tree Fun Time" do
      test "Can Translate" do
+       Assert.equal (t "a.b" $ Leaf "a.b" "b") (Just "b")
        Assert.equal (t "a" $ Leaf "a" "b") (Just "b")
        Assert.equal (t ".a" $ Leaf "a" "b") Nothing
        Assert.equal (t ".a" $ Branch "" [Leaf "a" "t"]) Nothing
